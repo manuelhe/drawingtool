@@ -1,8 +1,28 @@
+/**
+ * Creates a 2D canvas of the specified width and height.
+ * Each cell in the canvas is initialized with a space character (" ").
+ *
+ * @param width - The width of the canvas.
+ * @param height - The height of the canvas.
+ * @returns A 2D array representing the canvas.
+ */
 const createCanvas = (width: number, height: number): string[][] => {
   const canvas = Array.from({ length: height }, () => Array(width).fill(" "));
   return canvas;
 };
 
+/**
+ * Draws a line on the given canvas from (x1, y1) to (x2, y2).
+ * The line can be either horizontal or vertical.
+ *
+ * @param {string[][]} canvas - The 2D array representing the canvas.
+ * @param {number} x1 - The starting x-coordinate of the line.
+ * @param {number} y1 - The starting y-coordinate of the line.
+ * @param {number} x2 - The ending x-coordinate of the line.
+ * @param {number} y2 - The ending y-coordinate of the line.
+ *
+ * @returns {void}
+ */
 const drawLine = (
   canvas: string[][],
   x1: number,
@@ -10,6 +30,15 @@ const drawLine = (
   x2: number,
   y2: number,
 ): void => {
+  if (x1 > canvas[0].length || y1 > canvas.length) {
+    return;
+  }
+  if (x2 > canvas[0].length) {
+    x2 = canvas[0].length;
+  }
+  if (y2 > canvas.length) {
+    y2 = canvas.length;
+  }
   if (x1 === x2) {
     for (let y = y1 - 1; y < y2; y++) {
       canvas[y][x1 - 1] = "x";
@@ -21,6 +50,23 @@ const drawLine = (
   }
 };
 
+/**
+ * Draws a rectangle on the given canvas.
+ *
+ * @param canvas - A 2D array representing the canvas where the rectangle will be drawn.
+ * @param x1 - The x-coordinate of the top-left corner of the rectangle.
+ * @param y1 - The y-coordinate of the top-left corner of the rectangle.
+ * @param x2 - The x-coordinate of the bottom-right corner of the rectangle.
+ * @param y2 - The y-coordinate of the bottom-right corner of the rectangle.
+ *
+ * The function draws the rectangle by drawing four lines:
+ * - Top edge from (x1, y1) to (x2, y1)
+ * - Bottom edge from (x1, y2) to (x2, y2)
+ * - Left edge from (x1, y1) to (x1, y2)
+ * - Right edge from (x2, y1) to (x2, y2)
+ *
+ * The function assumes that x1 <= x2 and y1 <= y2.
+ */
 const drawRectangle = (
   canvas: string[][],
   x1: number,
@@ -28,12 +74,22 @@ const drawRectangle = (
   x2: number,
   y2: number,
 ): void => {
-  drawLine(canvas, x1, y1, x2, y1);
-  drawLine(canvas, x1, y2, x2, y2);
-  drawLine(canvas, x1, y1, x1, y2);
-  drawLine(canvas, x2, y1, x2, y2);
+  if (x1 <= x2 && y1 <= y2) {
+    drawLine(canvas, x1, y1, x2, y1);
+    drawLine(canvas, x1, y2, x2, y2);
+    drawLine(canvas, x1, y1, x1, y2);
+    drawLine(canvas, x2, y1, x2, y2);
+  }
 };
 
+/**
+ * Fills a contiguous area of the canvas with a specified color using the flood fill algorithm.
+ *
+ * @param canvas - A 2D array representing the canvas where each element is a string representing the color of a pixel.
+ * @param x - The x-coordinate (1-based) of the starting point for the fill operation.
+ * @param y - The y-coordinate (1-based) of the starting point for the fill operation.
+ * @param color - The color to fill the area with.
+ */
 const fill = (
   canvas: string[][],
   x: number,
@@ -57,6 +113,18 @@ const fill = (
   floodFill(x - 1, y - 1);
 };
 
+/**
+ * Processes a list of drawing commands and returns the resulting canvas as a string.
+ *
+ * The supported commands are:
+ * - "C width height": Create a new canvas with the given width and height.
+ * - "L x1 y1 x2 y2": Draw a line from (x1, y1) to (x2, y2).
+ * - "R x1 y1 x2 y2": Draw a rectangle with the top-left corner at (x1, y1) and the bottom-right corner at (x2, y2).
+ * - "B x y color": Fill the area connected to (x, y) with the given color.
+ *
+ * @param {string[]} commands - An array of drawing commands.
+ * @returns {string} The resulting canvas as a string.
+ */
 export const processCommands = (commands: string[]): string => {
   let canvas: string[][] = [];
   commands.forEach((command) => {
