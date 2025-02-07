@@ -130,33 +130,33 @@ export const processCommands = (commands: string[]): string => {
   commands.forEach((command) => {
     const parts = command.split(" ");
     const cmd = parts[0];
-    let width, height, x1, y1, x2, y2, rx1, ry1, rx2, ry2, bx, by, color;
+    let color;
     switch (cmd) {
       case "C":
-        width = parseInt(parts[1], 10);
-        height = parseInt(parts[2]);
-        canvas = createCanvas(width, height);
+        canvas = createCanvas(parseInt(parts[1], 10), parseInt(parts[2], 10));
         break;
       case "L":
-        x1 = parseInt(parts[1]);
-        y1 = parseInt(parts[2]);
-        x2 = parseInt(parts[3]);
-        y2 = parseInt(parts[4]);
-        drawLine(canvas, x1, y1, x2, y2);
+        drawLine(
+          canvas,
+          parseInt(parts[1], 10),
+          parseInt(parts[2], 10),
+          parseInt(parts[3], 10),
+          parseInt(parts[4], 10),
+        );
         break;
       case "R":
-        rx1 = parseInt(parts[1]);
-        ry1 = parseInt(parts[2]);
-        rx2 = parseInt(parts[3]);
-        ry2 = parseInt(parts[4]);
-        drawRectangle(canvas, rx1, ry1, rx2, ry2);
+        drawRectangle(
+          canvas,
+          parseInt(parts[1], 10),
+          parseInt(parts[2], 10),
+          parseInt(parts[3], 10),
+          parseInt(parts[4], 10),
+        );
         break;
       case "B":
-        bx = parseInt(parts[1]);
-        by = parseInt(parts[2]);
         color = parts[3].trim().substring(0, 1);
         if (color.length) {
-          fill(canvas, bx, by, color);
+          fill(canvas, parseInt(parts[1], 10), parseInt(parts[2], 10), color);
         }
         break;
     }
