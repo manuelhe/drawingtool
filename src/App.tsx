@@ -21,9 +21,9 @@ function App() {
             onChange={handleInput}
           ></textarea>
           <h2>Canvas</h2>
-          <pre>{canvas}</pre>
+          {canvas ? <pre>{canvas}</pre> : <p>... wating for commands</p>}
         </section>
-        <aside>
+        <article>
           <h2>Instructions</h2>
           The following set of commands are available:
           <ul>
@@ -43,7 +43,7 @@ function App() {
               with "color" c.
             </li>
           </ul>
-        </aside>
+        </article>
       </main>
       <footer>
         <p>
